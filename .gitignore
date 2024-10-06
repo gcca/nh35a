@@ -1,0 +1,8 @@
+build
+dist
+.cache
+target
+.build
+.dist
+Cargo.lock
+.zig-cache

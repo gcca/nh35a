@@ -1,0 +1,9 @@
+[package]
+name = "algrust"
+version = "0.0.1"
+authors = ["(gcca) <se@gcca.dev>"]
+edition = "2021"
+
+[[test]]
+name = "algrust-test"
+path = "src/tests.rs"
