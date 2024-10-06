@@ -1,0 +1,40 @@
+#include "types.h"
+
+typedef struct NHBTree_ NHBTree;
+typedef struct NHBTreeNode_ NHBTreeNode;
+typedef struct NHBTreeTraverseInfo_ NHBTreeTraverseInfo;
+
+typedef nhint (*NHBTreeCmp) (nhptr a, nhptr b);
+typedef nhbool (*NHBTreeTraverser) (nhptr key, nhptr value);
+typedef nhbool (*NHBTreeInfoTraverser) (nhptr key, nhptr value,
+                                        const NHBTreeTraverseInfo *info);
+
+struct NHBTree_
+{
+  struct NHBTreeNode_
+  {
+    NHBTreeNode *left;
+    NHBTreeNode *right;
+    nhptr key;
+    nhptr value;
+  } *root;
+};
+
+struct NHBTreeTraverseInfo_
+{
+  nhint level;
+  nhint position;
+};
+
+NHBTree *nh_btree_new (NHBTreeCmp cmp);
+void nh_btree_free (NHBTree *tree);
+
+void nh_btree_insert (NHBTree *tree, nhptr key, nhptr value);
+
+void nh_btree_preorder_traverse (NHBTree *tree, NHBTreeTraverser traverser);
+void nh_btree_inorder_traverse (NHBTree *tree, NHBTreeTraverser traverser);
+void nh_btree_postorder_traverse (NHBTree *tree, NHBTreeTraverser traverser);
+
+void nh_btree_levelorder_traverse (NHBTree *tree, NHBTreeTraverser traverser);
+void nh_btree_levelorder_info_traverse (NHBTree *tree,
+                                        const NHBTreeInfoTraverser info);
