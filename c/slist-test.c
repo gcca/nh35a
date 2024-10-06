@@ -1,0 +1,165 @@
+#include <stdio.h>
+
+#include "nh35a.h"
+
+int ZVALUES[] = { 10, 11, 12, 13, 14, 15 };
+
+void
+test_print (nhptr data)
+{
+  printf (" %d", *(int *)data);
+}
+
+void
+test_show (const char *name, NHSList *list)
+{
+  printf ("%s", name);
+  nh_slist_foreach (list, test_print);
+  printf ("\n");
+}
+
+NH_TEST (new)
+{
+  NHSList *list = nh_slist_new ();
+  nh_assert (list != NULL);
+
+  nh_slist_free (list);
+}
+
+NH_TEST (length)
+{
+  NHSList *list = nh_slist_new ();
+
+  nh_assert (nh_slist_length (list) == 0);
+
+  nh_slist_append (list, ZVALUES + 0);
+  nh_slist_append (list, ZVALUES + 1);
+  nh_slist_append (list, ZVALUES + 2);
+
+  nh_assert (nh_slist_length (list) == 3);
+
+  nh_slist_append (list, ZVALUES + 3);
+  nh_slist_append (list, ZVALUES + 4);
+
+  nh_assert (nh_slist_length (list) == 5);
+
+  test_show ("length:", list);
+
+  nh_slist_free (list);
+}
+
+NH_TEST (last)
+{
+  NHSList *list = nh_slist_new ();
+
+  nh_assert (nh_slist_last (list) == list->root);
+
+  nh_slist_append (list, ZVALUES + 0);
+  nh_slist_append (list, ZVALUES + 1);
+  nh_slist_append (list, ZVALUES + 2);
+  nh_slist_append (list, ZVALUES + 3);
+
+  nh_assert (nh_slist_last (list)->data == ZVALUES + 3);
+
+  nh_slist_append (list, ZVALUES + 4);
+  nh_slist_append (list, ZVALUES + 5);
+
+  nh_assert (nh_slist_last (list)->data == ZVALUES + 5);
+
+  test_show ("last:", list);
+
+  nh_slist_free (list);
+}
+
+NH_TEST (append)
+{
+  NHSList *list = nh_slist_new ();
+
+  nh_slist_append (list, ZVALUES + 0);
+  nh_slist_append (list, ZVALUES + 1);
+  nh_slist_append (list, ZVALUES + 2);
+  nh_slist_append (list, ZVALUES + 3);
+  nh_slist_append (list, ZVALUES + 4);
+
+  nh_assert (nh_slist_length (list) == 5);
+
+  test_show ("append:", list);
+
+  nh_slist_free (list);
+}
+
+NH_TEST (prepend)
+{
+  NHSList *list = nh_slist_new ();
+
+  nh_slist_append (list, ZVALUES + 0);
+  nh_slist_append (list, ZVALUES + 1);
+  nh_slist_append (list, ZVALUES + 2);
+  nh_slist_append (list, ZVALUES + 3);
+  nh_slist_prepend (list, ZVALUES + 4);
+
+  nh_assert (nh_slist_length (list) == 5);
+
+  nh_assert (nh_slist_last (list)->data == ZVALUES + 3);
+  nh_assert (list->root->next->data == ZVALUES + 4);
+
+  test_show ("prepend:", list);
+
+  nh_slist_free (list);
+}
+
+NH_TEST (nth)
+{
+  NHSList *list = nh_slist_new ();
+
+  nh_slist_append (list, ZVALUES + 0);
+  nh_slist_append (list, ZVALUES + 1);
+  nh_slist_append (list, ZVALUES + 2);
+  nh_slist_append (list, ZVALUES + 3);
+  nh_slist_append (list, ZVALUES + 4);
+
+  nh_assert (nh_slist_nth (list, 0)->data == ZVALUES + 0);
+  nh_assert (nh_slist_nth (list, 1)->data == ZVALUES + 1);
+  nh_assert (nh_slist_nth (list, 2)->data == ZVALUES + 2);
+  nh_assert (nh_slist_nth (list, 3)->data == ZVALUES + 3);
+  nh_assert (nh_slist_nth (list, 4)->data == ZVALUES + 4);
+
+  nh_slist_free (list);
+}
+
+NH_TEST (remove)
+{
+  NHSList *list = nh_slist_new ();
+
+  nh_slist_append (list, ZVALUES + 0);
+  nh_slist_append (list, ZVALUES + 1);
+  nh_slist_append (list, ZVALUES + 2);
+  nh_slist_append (list, ZVALUES + 3);
+  nh_slist_append (list, ZVALUES + 4);
+
+  test_show ("remove:", list);
+
+  nh_assert (nh_slist_length (list) == 5);
+
+  nh_slist_remove (list, ZVALUES + 3);
+  nh_slist_append (list, ZVALUES + 5);
+
+  test_show ("       ", list);
+
+  nh_assert (nh_slist_length (list) == 5);
+
+  nh_slist_free (list);
+}
+
+int
+main ()
+{
+  NH_TEST_CALL (new);
+  NH_TEST_CALL (length);
+  NH_TEST_CALL (last);
+  NH_TEST_CALL (append);
+  NH_TEST_CALL (prepend);
+  NH_TEST_CALL (nth);
+  NH_TEST_CALL (remove);
+  return 0;
+}
