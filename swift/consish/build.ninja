@@ -1,0 +1,19 @@
+builddir = build
+
+rule compile
+  command = swiftc $flags $in -o $out
+  description = SWIFTC $out
+
+rule run
+  command = ./$in
+  description = RUN $in
+  pool = console
+
+build $builddir/consish: compile consish.swift
+build $builddir/consish-test: compile consish.swift
+  flags = -D TEST
+
+build run: run $builddir/consish
+build test: run $builddir/consish-test
+
+default $builddir/consish

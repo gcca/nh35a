@@ -1,0 +1,21 @@
+builddir = build
+
+rule compile
+  command = c3c compile $in --output-dir $builddir
+  description = C3C $out
+
+rule run
+  command = ./$in
+  description = RUN $in
+  pool = console
+
+rule test
+  command = c3c compile-test $in --output-dir $builddir
+  description = TEST $in
+  pool = console
+
+build $builddir/consish: compile consish.c3
+build run: run $builddir/consish
+build test: test consish.c3
+
+default $builddir/consish

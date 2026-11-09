@@ -1,0 +1,19 @@
+builddir = build
+
+rule native
+  command = $cmd
+  description = $cmd
+  pool = console
+
+build force: phony
+
+build all: native | force
+  cmd = zig build --prefix $builddir
+
+build run: native | force
+  cmd = zig build run --prefix $builddir
+
+build test: native | force
+  cmd = zig build test
+
+default all

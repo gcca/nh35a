@@ -6,3 +6,4 @@ target
 .dist
 Cargo.lock
 .zig-cache
+_build

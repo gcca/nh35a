@@ -1,0 +1,13 @@
+(library
+ (name consish)
+ (modules consish))
+
+(executable
+ (name main)
+ (modules main)
+ (libraries consish))
+
+(test
+ (name main_test)
+ (modules main_test)
+ (libraries consish))
