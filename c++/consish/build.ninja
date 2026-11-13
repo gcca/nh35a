@@ -1,0 +1,30 @@
+builddir = build
+cxx = c++
+cxxflags = -std=c++26 -Wall -Wextra -Wpedantic -Werror
+
+rule compile
+  command = $cxx $cxxflags $flags -MMD -MF $out.d $in -o $out
+  description = CXX $out
+  depfile = $out.d
+  deps = gcc
+
+rule compile_test
+  command = $cxx $cxxflags $$(pkg-config --cflags gtest_main gmock) -MMD -MF $out.d $in $$(pkg-config --libs gtest_main gmock) -o $out
+  description = CXX $out
+  depfile = $out.d
+  deps = gcc
+
+rule run
+  command = ./$in
+  description = RUN $in
+  pool = console
+
+build $builddir/consish: compile consish.cc
+build $builddir/consish-test.o: compile consish.cc
+  flags = -DTEST -c
+build $builddir/consish-test: compile_test consish-test.cc $builddir/consish-test.o
+
+build run: run $builddir/consish
+build test: run $builddir/consish-test
+
+default $builddir/consish
